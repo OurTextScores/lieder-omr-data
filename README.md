@@ -11,13 +11,11 @@ final human review, not a CC0 declaration.
 
 ## Inputs
 
-1. A pinned HOMR checkout with `lieder-rebuild/` manifests and
-   `training/omr_datasets/` builders.
-2. An authorised local source store containing the IMSLP PDFs. This repository never
+1. An authorised local source store containing the IMSLP PDFs. This repository never
    downloads or redistributes them automatically.
-3. An OpenScore Lieder checkout (or the `scores.yaml` revision cached by HOMR) for the
+2. An OpenScore Lieder checkout (or a frozen `scores.yaml`) for the
    CC0 symbolic sources.
-4. Python dependencies used by HOMR's crop, alignment, token, and package validators.
+3. Python dependencies listed in `requirements.txt`.
 
 ## Build from scratch
 
@@ -25,12 +23,12 @@ final human review, not a CC0 declaration.
 git clone https://github.com/MALerLab/lieder-omr-data.git
 cd lieder-omr-data
 
-export HOMR_SOURCE=/absolute/path/to/homr
 export IMSLP_PDFS=/authorised/path/to/imslp_pdfs
+export SCORES_YAML=/absolute/path/to/OpenScore-Lieder/data/scores.yaml
 export OUT=/absolute/path/to/lieder-omr-build
 
 make check-inputs
-make audit-rights
+make audit-rights SCORES_YAML="$SCORES_YAML"
 make build-private
 # Only after final source review:
 make build-public-candidate
@@ -39,8 +37,8 @@ make verify
 
 `build-private` may use the complete v4 boundary-safe corpus only in an
 access-controlled store. `build-public-candidate` must read the frozen 25-ID allow-list,
-not the complete manifest. Both builds must materialize paths and pass HOMR's portable
-package verifier before release.
+not the complete manifest. Both builds must materialize paths and pass this repository's
+portable package verifier before release.
 
 ## Rights model
 
@@ -50,9 +48,8 @@ package verifier before release.
 - Combined public dataset: use a per-source provenance table and an explicit `other`
   rights statement unless final review establishes a suitable public-domain label.
 
-See HOMR's `docs/LIEDER_IMSLP_RELEASE_AUDIT.md` and
-`docs/HF_DATASET_PUBLICATION_PLAN.md` for the audit method, exclusions, expected
-repository layout, and final release gates.
+The private source database carries the original audit ledger and release plan; this
+repository carries the code needed to reproduce the audit.
 
 ## License
 

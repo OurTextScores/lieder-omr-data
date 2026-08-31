@@ -2,11 +2,11 @@
 
 check-inputs:
 
-	python3 scripts/check_inputs.py --homr "$(HOMR_SOURCE)" --pdfs "$(IMSLP_PDFS)"
+	python3 scripts/check_inputs.py --pdfs "$(IMSLP_PDFS)" --scores-yaml "$(SCORES_YAML)"
 
 audit-rights: check-inputs
 
-	cd "$(HOMR_SOURCE)" && python3 -m training.omr_datasets.audit_lieder_imslp_rights --help
+	python3 tools/audit_lieder_imslp_rights.py --help
 
 build-private: check-inputs
 
@@ -20,8 +20,8 @@ build-public-candidate: check-inputs
 verify:
 
 	test -n "$(OUT)"
-	cd "$(HOMR_SOURCE)" && python3 -m training.omr_datasets.package_dataset --root "$(OUT)" --verify-only
+	python3 tools/package_dataset.py --root "$(OUT)" --verify-only
 
 help:
 
-	@echo "Set HOMR_SOURCE, IMSLP_PDFS, and OUT; then run make check-inputs."
+	@echo "Set IMSLP_PDFS, SCORES_YAML, and OUT; then run make check-inputs."
