@@ -1,27 +1,32 @@
 .DEFAULT_GOAL := help
 
-check-inputs:
+SOURCE_DIR ?= sources
+ARCHIVE_BASE_URL ?=
 
-	python3 scripts/check_inputs.py --pdfs "$(IMSLP_PDFS)" --scores-yaml "$(SCORES_YAML)"
+fetch-private-source:
+	python3 scripts/fetch_source.py all --dest "$(SOURCE_DIR)" $(if $(ARCHIVE_BASE_URL),--base-url "$(ARCHIVE_BASE_URL)")
 
-audit-rights: check-inputs
+extract-private-source: fetch-private-source
+	python3 scripts/fetch_source.py all --dest "$(SOURCE_DIR)" --extract
 
+fetch-public-candidate:
+	python3 scripts/fetch_source.py pd25 --dest "$(SOURCE_DIR)" $(if $(ARCHIVE_BASE_URL),--base-url "$(ARCHIVE_BASE_URL)")
+
+extract-public-candidate: fetch-public-candidate
+	python3 scripts/fetch_source.py pd25 --dest "$(SOURCE_DIR)" --extract
+
+audit-rights:
 	python3 tools/audit_lieder_imslp_rights.py --help
 
-build-private: check-inputs
-
-	@echo "Use only v4 boundary-safe manifests; package into the private all-source repository."
-	@echo "Never include historical/model-derived or boundary-ambiguous labels."
-
-build-public-candidate: check-inputs
-
-	@echo "Use only imslp_release_candidate_v4_score_ids.txt after final human source review."
+package:
+	test -n "$(OUT)"
+	python3 tools/package_dataset.py --root "$(OUT)"
 
 verify:
-
 	test -n "$(OUT)"
 	python3 tools/package_dataset.py --root "$(OUT)" --verify-only
 
 help:
-
-	@echo "Set IMSLP_PDFS, SCORES_YAML, and OUT; then run make check-inputs."
+	@echo "make extract-private-source    Fetch the locked 215-source private snapshot."
+	@echo "make extract-public-candidate  Fetch the locked 25-source public-candidate snapshot."
+	@echo "make package OUT=/path         Verify a materialized portable dataset."

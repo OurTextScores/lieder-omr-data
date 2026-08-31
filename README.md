@@ -1,44 +1,42 @@
 # Lieder OMR data build
 
-Reproducible build instructions for the boundary-safe OpenScore Lieder staff-crop
-corpus used by HOMR. This is a **code and provenance repository**: it contains no IMSLP
-scans, PDFs, crops, or model-generated labels.
+Provenance and source-reconstruction instructions for the boundary-safe OpenScore Lieder
+staff-crop corpus used by HOMR. This repository contains no IMSLP scans, PDFs, crops, or
+model-generated labels; those are supplied as separately locked, checksummed archives.
 
 The full corpus has 215 exact IMSLP source files and remains private because scan rights
 are file-specific. A conservative public candidate is limited to 25 exact records whose
 IMSLP metadata says `Public Domain` and `Normal Scan`; that is a release candidate pending
 final human review, not a CC0 declaration.
 
-## Inputs
+## Locked source inputs
 
-1. An authorised local source store containing the IMSLP PDFs. This repository never
-   downloads or redistributes them automatically.
-2. An OpenScore Lieder checkout (or a frozen `scores.yaml`) for the
-   CC0 symbolic sources.
-3. Python dependencies listed in `requirements.txt`.
+`sources.lock.json` records the CDN URL, exact byte length, SHA-256, archive layout, and
+access class for both frozen v4 inputs. The downloader is standard-library Python,
+retains an interrupted `.part` download for resumption, verifies SHA-256, and rejects
+unsafe archive paths. It does not require an OpenScore checkout or a separately managed
+IMSLP PDF store.
+
+The R2 S3 endpoint in the lockfile is the immutable object location, not a browser-public
+origin. Until its public R2.dev/custom-domain URL is enabled, pass that origin explicitly,
+for example `make extract-private-source ARCHIVE_BASE_URL=https://archives.example.org`.
 
 ## Build from scratch
 
 ```bash
-git clone https://github.com/MALerLab/lieder-omr-data.git
+git clone https://github.com/jhlusko/lieder-omr-data.git
 cd lieder-omr-data
 
-export IMSLP_PDFS=/authorised/path/to/imslp_pdfs
-export SCORES_YAML=/absolute/path/to/OpenScore-Lieder/data/scores.yaml
-export OUT=/absolute/path/to/lieder-omr-build
-
-make check-inputs
-make audit-rights SCORES_YAML="$SCORES_YAML"
-make build-private
-# Only after final source review:
-make build-public-candidate
-make verify
+make extract-private-source
+# Or, for the exact 25-source public-domain normal-scan candidate:
+make extract-public-candidate
 ```
 
-`build-private` may use the complete v4 boundary-safe corpus only in an
-access-controlled store. `build-public-candidate` must read the frozen 25-ID allow-list,
-not the complete manifest. Both builds must materialize paths and pass this repository's
-portable package verifier before release.
+The `all` archive contains the exact 215-source private v4 input; `pd25` contains the
+frozen 25-ID release-candidate subset and its allow-list. The historical crop/token
+transformation has not yet been relocated into this repository, so source extraction is
+reproducible today but a fresh derived-corpus build is not yet claimed. The vendored audit
+and package-verification tools remain runnable without HOMR.
 
 ## Rights model
 
