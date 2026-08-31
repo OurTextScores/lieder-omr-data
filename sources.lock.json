@@ -3,7 +3,7 @@
   "published": "2026-08-31",
   "sources": {
     "all": {
-      "url": "https://fd7dc9fe31017d88220ffdc0d90f4ba0.r2.cloudflarestorage.com/archives/lieder-v4-all-sources.tar.gz",
+      "url": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-v4-all-sources.tar.gz",
       "filename": "lieder-v4-all-sources.tar.gz",
       "bytes": 774234924,
       "sha256": "a0f60fba473e27da7515e46bfe421bded3615ef0eed5e25659eceaa98ddeb1dd",
@@ -12,7 +12,7 @@
       "description": "Frozen v4 source snapshot: 215 exact IMSLP files, OpenScore material, and provenance manifests."
     },
     "pd25": {
-      "url": "https://fd7dc9fe31017d88220ffdc0d90f4ba0.r2.cloudflarestorage.com/archives/lieder-v4-pd25-sources.tar.gz",
+      "url": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-v4-pd25-sources.tar.gz",
       "filename": "lieder-v4-pd25-sources.tar.gz",
       "bytes": 17045201,
       "sha256": "ad94806de35b970c755bfd27b2d78aaf29f92e406124fd3f808d637701492184",

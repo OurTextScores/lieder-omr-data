@@ -17,9 +17,9 @@ retains an interrupted `.part` download for resumption, verifies SHA-256, and re
 unsafe archive paths. It does not require an OpenScore checkout or a separately managed
 IMSLP PDF store.
 
-The R2 S3 endpoint in the lockfile is the immutable object location, not a browser-public
-origin. Until its public R2.dev/custom-domain URL is enabled, pass that origin explicitly,
-for example `make extract-private-source ARCHIVE_BASE_URL=https://archives.example.org`.
+The lockfile uses the public R2 development origin. A future custom CDN domain can be
+used without modifying the lockfile, for example
+`make extract-private-source ARCHIVE_BASE_URL=https://archives.example.org`.
 
 ## Build from scratch
 
