@@ -78,7 +78,25 @@ def main() -> None:
     args = parser.parse_args()
     if not ALIGNMENT.is_file():
         raise SystemExit(f"missing frozen alignment: {ALIGNMENT}")
-    if args.out.exists() and any(args.out.iterdir()):
+    # Detection writes into `_build` INSIDE the output, so a blanket "must be empty"
+    # made --skip-detection impossible to use: the only directory holding the systems and
+    # pages worth reusing is the one the guard rejects. With the flag set, `_build` is the
+    # one thing allowed to be there, and it must actually carry what the flag promises.
+    existing = sorted(path.name for path in args.out.iterdir()) if args.out.exists() else []
+    if args.skip_detection:
+        unexpected = [name for name in existing if name != "_build"]
+        if unexpected:
+            raise SystemExit(
+                f"--skip-detection reuses {args.out / '_build'} and writes beside it, so "
+                f"the output may hold nothing else; found: {', '.join(unexpected)}"
+            )
+        for required in ("systems", "pages"):
+            if not (args.out / "_build" / required).is_dir():
+                raise SystemExit(
+                    f"--skip-detection needs {args.out / '_build' / required} from an "
+                    f"earlier run; drop the flag to detect from the archived PDFs"
+                )
+    elif existing:
         raise SystemExit(f"output must be empty or absent: {args.out}")
     pdfs = args.source / "pdfs"
     openscore = args.source / "openscore-lieder"
@@ -90,12 +108,18 @@ def main() -> None:
     scores_yaml, mscx_cache, mxl_cache = local_caches(openscore, work)
     ids = score_ids(pdfs, work / "score_ids.txt")
     env = os.environ.copy()
-    env["PYTHONPATH"] = os.pathsep.join([str(RUNTIME), env.get("PYTHONPATH", "")])
+    env["PYTHONPATH"] = os.pathsep.join([str(RUNTIME), str(ROOT), env.get("PYTHONPATH", "")])
     systems = work / "systems"
     pngs = work / "pages"
     ground_truth = work / "ground_truth"
 
     if not args.skip_detection:
+        # The detector's segmentation and staff-detection weights are not vendored - only
+        # .py sources are - so they must be fetched before the first page is read. Without
+        # this every page raised "model file doesn't exist" inside the per-page try/except
+        # that exists for title pages and blank leaves, and 215 scores reported
+        # "OK: 0 page(s), 0 system(s)" while detecting nothing at all.
+        run("tools.fetch_detector_weights", env=env)
         run("training.omr_datasets.detect_imslp_systems", "--pdfs", str(pdfs), "--pngs-out", str(pngs), "--systems-out", str(systems), env=env)
     run("training.omr_datasets.fetch_lieder_ground_truth", "--score-ids", str(ids), "--scores-yaml-cache", str(scores_yaml), "--file-tree-cache", str(mscx_cache), "--out", str(ground_truth), env=env)
     pairs = args.out / "pairs"

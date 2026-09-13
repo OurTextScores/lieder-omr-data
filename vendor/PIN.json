@@ -1,5 +1,5 @@
 {
-  "commit": "87ff3d2c55988629f5eea20a87273f824ecbdb56",
+  "commit": "b29f0a243dab812648b7a6d4c6688f4ba7feb23e",
   "files": {
     "homr/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "homr/autocrop.py": "8d898b51d4a892052eea695c8b95d7262ed1c4b5180ff0b99cb2c53a3ddf12ce",
@@ -151,7 +151,7 @@
     "training/omr_datasets/error_taxonomy.py": "a1ca7bf092513bedd9bcb9ca745fc26fd2ee957502bf9292a14ca7b8eac18527",
     "training/omr_datasets/eval_tuplet_repair.py": "84ed31a709c2efb1d6f0bd80a216bdde767e981a548a787d4714ffe386e2fcf9",
     "training/omr_datasets/extract_stage2_pairs.py": "a515c06808b7fe8888f9b70fa027b1bcde5b812099a935ab9ea566dd18e956aa",
-    "training/omr_datasets/fetch_lieder_ground_truth.py": "544cad9ba008c9b6e6fc6f62b0923d8e0964078a02196d47e7b605adb031a6de",
+    "training/omr_datasets/fetch_lieder_ground_truth.py": "e88fcfce689abb13a9e84c8eb172f9e8aec6d22939f12e64b2bf0799c6c85bad",
     "training/omr_datasets/fingerprint_measures.py": "26a11f7c610f528eeb506241e1273bd64f26caf99024ddaa06eae0c0dc2986d6",
     "training/omr_datasets/humdrum_kern_parser.py": "514e392d00d45ee3587a45bdc69f98cb738f079fe27254d0ad9c5b28e7a69ff8",
     "training/omr_datasets/lieder_voice.py": "593179c0e07543a717decb82d216f9ddfe2e8bd20ea290ab666fdfde6d51ed20",
