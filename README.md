@@ -32,11 +32,50 @@ make extract-private-source
 make extract-public-candidate
 ```
 
+## Build environment
+
+The private v4 rebuild runs on Linux with **Python 3.11--3.12**, the packages in
+`requirements.txt` plus HOMR's build dependencies (`torch`, `opencv-python-headless`,
+`Pillow`, `onnxruntime`, `pypdfium2`, `music21`, and `PyYAML`). The detector also needs
+its published segmentation/staff-detection weights; it obtains them through HOMR's
+pinned downloader on first use. No live OpenScore checkout is required: the builder
+reads the archived local `.mscx` and `.mxl` files.
+
+```bash
+uv venv --python 3.12 .venv
+uv pip install --python .venv/bin/python -r requirements.txt \
+  torch opencv-python-headless Pillow onnxruntime pypdfium2 music21
+```
+
+The full private source archive is required for `make build-v4`; the public PD25 archive
+is deliberately not treated as an interchangeable training source.
+
 The `all` archive contains the exact 215-source private v4 input; `pd25` contains the
-frozen 25-ID release-candidate subset and its allow-list. The historical crop/token
-transformation has not yet been relocated into this repository, so source extraction is
-reproducible today but a fresh derived-corpus build is not yet claimed. The vendored audit
-and package-verification tools remain runnable without HOMR.
+frozen 25-ID release-candidate subset and its allow-list. The boundary-safe v4 detector,
+alignment, crop, token, sidecar, audit, and frozen-split stages are vendored and exposed
+as `make build-v4 OUT=/path`. See [the executable build notes](docs/BUILD_PIPELINE.md).
+
+## Vendored runtime
+
+The corpus is built by HOMR's own converter, vendored under `vendor/homr-stage2` so the
+dataset can be rebuilt without a HOMR checkout. `vendor/PIN.json` records the commit it
+came from and a SHA-256 for every vendored file, because "the current converter" is not a
+reproducible claim and a snapshot whose origin is unrecorded can be neither audited nor
+refreshed on purpose.
+
+```bash
+make verify-runtime                  # the vendored tree still matches its pin
+python3 tools/vendor_runtime.py --refresh --source /path/to/homr    # move the pin
+```
+
+Refreshing refuses a checkout with uncommitted changes: a pin naming a commit nobody else
+can check out is worse than no pin. Only `.py` sources are vendored - model weights and
+ONNX graphs are fetched by HOMR's own pinned downloader at build time.
+
+**Pin history.** The runtime was previously an unrecorded snapshot. It is now pinned at
+`87ff3d2` (2026-09-13), which is the first revision to write notation sidecars at schema
+**v5** - the schema carrying the per-note voice. Corpora built before that carry v4 and no
+voice; see `docs/BUILD_PIPELINE.md`.
 
 ## Rights model
 
