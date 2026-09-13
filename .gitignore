@@ -6,3 +6,9 @@ data/
 *.pdf
 *.png
 sources/
+
+# Detector weights are fetched by tools/fetch_detector_weights.py at build time,
+# never vendored: they are large binaries with their own pinned download, and the
+# runtime pin in vendor/PIN.json covers .py sources only.
+*.onnx
+*.onnx.data
