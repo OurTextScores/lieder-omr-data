@@ -20,5 +20,74 @@
       "access": "public-candidate",
       "description": "Frozen 25-source public-domain normal-scan candidate and its exact allow-list."
     }
+  },
+  "corpus": {
+    "name": "lieder-pd212-v8",
+    "published": "2026-09-24",
+    "base_url": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-pd212-v8",
+    "sidecar_schema": "homr.notation-sidecar.v6",
+    "description": "The rights-cleared Lieder corpus: 3,867 windows from the 212 IMSLP sources the owner cleared on 2026-09-24. This is the DERIVED corpus, ready to train on. It is not the source snapshot under `sources` above, which holds all 215 sources including the three that are not cleared for redistribution.",
+    "rights": {
+      "decided": "2026-09-24",
+      "ledger": "homr: lieder-rebuild/rights_decisions_v4.json",
+      "audit": "homr: docs/LIEDER_IMSLP_RELEASE_AUDIT.md",
+      "basis": "Every included source's IMSLP record states Copyright: Public Domain.",
+      "excluded": {
+        "IMSLP257340": "CC-BY-SA 4.0 and Image Type=Typeset",
+        "IMSLP16883": "no IMSLP record for the file id",
+        "IMSLP16400": "no IMSLP record for the file id"
+      },
+      "not_legal_advice": "A provenance decision by the corpus owner. IMSLP notes public-domain treatment can be jurisdiction- and edition-specific."
+    },
+    "splits": {
+      "train": {
+        "windows": 3567,
+        "scores": 199,
+        "shards": 2
+      },
+      "valid": {
+        "windows": 300,
+        "scores": 13,
+        "shards": 1
+      }
+    },
+    "index_urls": {
+      "train": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-pd212-v8/index_train.txt",
+      "valid": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-pd212-v8/index_valid.txt",
+      "manifest": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-pd212-v8/manifest.json"
+    },
+    "shards": [
+      {
+        "name": "train-0000.tar.zst",
+        "url": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-pd212-v8/train-0000.tar.zst",
+        "split": "train",
+        "windows": 2795,
+        "scores": 154,
+        "bytes": 377127915,
+        "sha256": "96697d92f155cf46ccdaf1d91c2521d46eb06f386dac7d3ffc6c9470d1c725c2"
+      },
+      {
+        "name": "train-0001.tar.zst",
+        "url": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-pd212-v8/train-0001.tar.zst",
+        "split": "train",
+        "windows": 772,
+        "scores": 45,
+        "bytes": 71736837,
+        "sha256": "cf6b2d13fc34c0a89951025716f4b5a7f48d1cf1aa74882663595fc58e9c57ec"
+      },
+      {
+        "name": "valid-0000.tar.zst",
+        "url": "https://pub-d31b33903cd04fec8cc87ee0667c1981.r2.dev/lieder-pd212-v8/valid-0000.tar.zst",
+        "split": "valid",
+        "windows": 300,
+        "scores": 13,
+        "bytes": 33044153,
+        "sha256": "a8b53148b7e409e1f3112aa9dfb51db656c0b4fbc94a4c41dd15e5af89329495"
+      }
+    ]
+  },
+  "notes": {
+    "two_artifacts": "`sources` locks the PRIVATE 215-source snapshot, used to rebuild the corpus from scratch; it contains sources not cleared for redistribution. `corpus` is the PUBLIC rights-cleared build. Fetch `corpus` to train; fetch `sources` only to rebuild or audit.",
+    "shards_are_prefixed": "Under lieder-pd212-v8/ in a bucket shared with the PDMX corpus and the OSSQ snapshot. package_pdmx.py names shards train-NNNN/valid-NNNN for any corpus, so each needs its own prefix."
   }
 }

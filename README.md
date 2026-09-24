@@ -9,6 +9,33 @@ are file-specific. A conservative public candidate is limited to 25 exact record
 IMSLP metadata says `Public Domain` and `Normal Scan`; that is a release candidate pending
 final human review, not a CC0 declaration.
 
+## Two artifacts, and which one you want
+
+`sources.lock.json` locks two different things. Fetching the wrong one is the easy mistake.
+
+**`corpus` — the rights-cleared build.** 3,867 windows from the 212 IMSLP sources cleared on
+2026-09-24, with v6 notation sidecars, ready to train on. This is almost certainly what you want:
+
+```bash
+make fetch-corpus                 # 482 MB, 3,867 windows
+make fetch-corpus SPLIT=valid     #  33 MB,   300 windows - enough to evaluate a checkpoint
+make verify-corpus                # re-check against the digests pinned in git
+```
+
+Shards are verified against digests held in this repository, not against a checksum file sitting
+beside the data on the origin. A shard whose digest does not match is deleted rather than left on
+disk to be trained on.
+
+**`sources` — the private 215-source snapshot.** For rebuilding the corpus from scratch or
+auditing it. It contains all 215 sources, **including three that are not cleared for
+redistribution**, so do not republish anything derived from it without checking the rights ledger.
+
+Rights provenance lives in the homr repository: `lieder-rebuild/rights_decisions_v4.json` records
+per source the copyright line its IMSLP record gave and why it is included, and
+`docs/LIEDER_IMSLP_RELEASE_AUDIT.md` records how the position was reached. Every source in the
+public corpus has an IMSLP record stating `Copyright: Public Domain`. That is a provenance decision
+by the corpus owner, not legal advice.
+
 ## Locked source inputs
 
 `sources.lock.json` records the CDN URL, exact byte length, SHA-256, archive layout, and
